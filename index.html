@@ -60,28 +60,80 @@
 				<section>
 					<section>
 						<h3>Main goal</h3>
-						<p>Localize object on a picture with the minimum number of steps</p>
+						<p>Localize object on a picture with the minimum number of steps using deep reinforcement learning</p>
 						
 						<img src="img/2008_000116.gif" />
 						<img src="img/2009_001522.gif" />
 						<img src="img/2008_001071.gif" />
+						
+						<!-- regresja pozycji obiektów -->
 					</section>
 					
 					<section>
 						<h3>Questions</h3>
 						<ul>
 						    <li>Architecture: DQN + VGG,</li>
-							<li>Dataset: Pascal VOC,</li>
 							<li>Gamification: Actions and Rewards,</li>
-							<li>Libraries: Theano, Lasagne,</li>
-							<li>Learning function: RMSProp.
+							<li>Dataset: Pascal VOC,</li>
+							<li>Implementation details: Theano, Lasagne, RMSProp, ...</li>
 						</ul>
 					</section>
+					
+					<section>
+						<h3>Agent and environment</h3>
+						<img src="img/reinforcement_learning.png" style="width: 600px;"/>
+					</section>
+					
+					<section style="font-size: 0.8em;">
+						<h2>Action value function</h2>
+						
+						$Q^*(s,a) = \max_{\pi} \mathbb{E} [R_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \dotso | s_t = s, a_t = a, \pi ]$
+						
+						<br /><br /><br />
+						We've started from a publically available implementation of the DQN algorithm available in [2].
+						<!--<br /><br />
+						<ul>
+							<li>Image in BGR as input to VGG</li>
+							<li>Action ID as output</li>
+						</ul>-->
+					</section>
+					
+					<section data-markdown style="font-size: 0.5em;">
+					    <script type="text/template" style="font-size: 0.5em;">
+# Actions
+						
+| Action number | Description                                       |
+| ------------- |:-------------:                                    |
+| 1             | move box 5 pixels right                           |
+| 2             | move box 5 pixels bottom                          |
+| 3             | move box 5 pixels top                             |
+| 4             | move box 5 pixels left                            |
+| 5             | decrease box 5 pixels horizontally and vertically |
+| 6             | decrease box 5 pixels horizontally                |
+| 7             | decrease box 5 pixels vertically                  |
+| 8             | increase box 5 pixels horizontally and vertically |
+| 9             | increase box 5 pixels horizontally                |
+| 10            | increase box 5 pixels vertically                  |
+| 11            | terminate                                         |
+						</script>
+					</section>
+					
+					<section style="font-size: 0.8em;">
+						<h2>Reward function</h2>
+\[
+r(s_i, a_i, B_i, T) = \begin{cases}
+    \frac{B_i \cap T}{B_i \cup T}, & \text{if } a = \text{TERMINAL, } \frac{B_i \cap T}{B_i \cup T} \geq 0.75, \\
+    0, & \text{if } a = \text{TERMINAL, } \frac{B_i \cap T}{B_i \cup T} < 0.75, \\
+    \frac{B_i \cap T}{B_i \cup T}, & \text{if } a \neq \text{TERMINAL, } i = 0, \\
+    \frac{B_i \cap T}{B_i \cup T} - \frac{B_{i-1} \cap T}{B_{i-1} \cup T}, & \text{if } a \neq \text{TERMINAL, } i \neq 0.
+\end{cases}
+\]
+
+					</section>
 				</section>
-			
 
 				<section data-background="#222">
-					<section>
+					<!--<section>
 						<h3>Challenges</h3>
 						
 						<ul>
@@ -90,6 +142,7 @@
 								<img src="img/breakout.gif" style="height: 300px;" alt="breakout"></li>
 							<li>AlphaGo</li>
 							<li>StarCraft II challenge</li>
+							<li>OpenAI Gym</li>
 						</ul>
 					</section>
 					
@@ -102,29 +155,7 @@
 						<br />
 						<h3>Reinforcement learning</h3>
 						$$y = f(x), (x,y) \in (X, Y)\text{, given $z$}$$
-					</section>
-					
-					<section>
-						<h3>Agent and environment</h3>
-						<img src="img/reinforcement_learning.png" style="width: 600px;"/>
-					</section>
-					
-					<section>
-						<h3>Action value function</h3>
-						
-						$Q^*(s,a) = \max_{\pi} \mathbb{E} [R_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \dotso | s_t = s, a_t = a, \pi ]$
-						
-						<br /><br />
-						<ul>
-							<li>Image in BGR as input to VGG</li>
-							<li>Action ID as output</li>
-						</ul>
-					</section>
-					
-					<section>
-						<h3>Fully Connected Layer</h3>
-						<img src="img/fully_connected.png" alt="">
-					</section>
+					</section>-->
 					
 					<section>
 						<h3>Convolution Layer</h3>
@@ -136,9 +167,12 @@
 						<h3>Pooling Layer</h3>
 						<img src="img/pooling.png" style="height: 200px;" alt="">
 					</section>
-				</section>
+					
+					<section>
+						<h3>Fully Connected Layer</h3>
+						<img src="img/fully_connected.png" alt="">
+					</section>
 				
-				<section>					
 					<section data-markdown style="font-size: 0.5em;">
 					    <script type="text/template" style="font-size: 0.5em;">
 # Architectures
@@ -161,7 +195,7 @@
 | FC: [1x1x11]            | CONV3-32: [56x56x32]     | CONV3-96: [56x56x96]     |
 |                         | FC:	[1x1x512]            | CONV3-96: [56x56x96]     |
 |	                      | FC:	[1x1x11]             | FC:	[1x1x1024]          |
-|	                      | FC:	[1x1x11]             |                          |
+|	                      |                          | FC:	[1x1x11]            |
 						</script>			
 					</section>
 				
@@ -185,6 +219,7 @@ R-CNN: 59.1% for dogs and 57.7% for cats at PASCAL VOC 2012
 						</script>
 					</section>
 				
+				<!--
 					<section>
 						<h3>Mean Average Precission</h3>
 						<img src="img/map.png" alt="">
@@ -204,7 +239,7 @@ R-CNN: 59.1% for dogs and 57.7% for cats at PASCAL VOC 2012
 						<h3>Actions</h3>
 						<img src="img/actions.png" alt="">
 					</section>
-					
+				-->
 				</section>				
 				
 				<section>
@@ -221,12 +256,24 @@ R-CNN: 59.1% for dogs and 57.7% for cats at PASCAL VOC 2012
 					<section>
 						<h3>Todo</h3>
 						<ul>
+						<!--
 							<li>more experiments with different parameters,</li>
 							<li>more convolution layers,</li>
 							<li>better monitoring of gradient propagation (problem of vanishing gradient),</li>
 							<li>increasing dataset,</li>
 							<li>more powerful graphic cards,</li>
 							<li>using model-based deep reinforcement learning for pretraining.</li>
+						-->
+							<li>improve reward function with more distinguishable set of actions,</li>
+							<li>better dataset with objects of various size,</li>
+							<li>analysis of performed actions,</li>
+							<li>other reinforcement learning methods, eg. REINFORCE algorithm.</li>
+						<!--
+							- lepsza funkcja nagrody tak aby algorytm miał zróżnicowany zbiór akcji które podejmuje,
+							- inny zbiór danych zaw. obiekty o bardziej zróżnicowanych rozmiarach,
+							- obecnie mamy zbiór w którym obiekty są zasadniczo duże co w połączeniu z funkcją nagrody którą opracowaliśmy powoduje, że podstawową akcją podejmowaną przez agenta jest powiększenie prostokątu, gdybyśmy mieli bardziej zróżnicowany zbiór danych i jeszcze bardziej dopracowaną funkcję kosztu to sądzimy, że agent uczyłby się bardziej wyrafinowanej polityki,
+							- warto rozważyć inne metody uczenia ze wzmocnieniem, np. algorytm REINFORCE lub inne architektury sieci konwolucyjnej.
+						-->
 						</ul>
 					</section>
 				</section>				
@@ -235,14 +282,13 @@ R-CNN: 59.1% for dogs and 57.7% for cats at PASCAL VOC 2012
 					<h3>Bibliography</h3>
 					<small>
 						<ol>
-							<li>Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis, <q>Human-level control through deep reinforcement learning.</q> Nature 518(7540):529--533 (February 2015)</li>
-							<li>Richard S. Sutton and Andrew G. Barto, <q>Introduction to Reinforcement Learning</q>, MIT Press, Cambridge, MA, USA, 2nd edition, 2012</li>
-							<li>Juan C. Caicedo, Svetlana Lazebnik, <q>Active Object Localization with Deep Reinforcement Learning</q>, 2015</li>
-							<li>M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, and A. Zisserman, <q>The pascal visual object classes (voc) challenge</q>, International Journal of Computer Vision, 88(2):303–338, June 2010.</li>
+							<li>Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness, Marc G. Bellemare, Alex Graves, Martin Riedmiller, Andreas K. Fidjeland, Georg Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis, <q>Human-level control through deep reinforcement learning.</q> Nature 518(7540):529--533 (February 2015),</li>
 							<li>Nathan Sprague, <q>Theano-based implementation of deep q-learning</q>, 2015, [on-line] <a href=https://github.com/spragunr/deep_q_rl">https://github.com/spragunr/deep_q_rl</a> (visited: 12.10.2017).</li>
-							<li>Karen Simonyan and Andrew Zisserman, <q>Very deep convolutional networks for
-large-scale image recognition</q>, CoRR, abs/1409.1556, 2014.</li>
-							<li><q>CS231n Convolutional Neural Networks for Visual Recognition</q>, online: <a href="http://cs231n.github.io">http://cs231n.github.io</a></li>
+							<li>Juan C. Caicedo, Svetlana Lazebnik, <q>Active Object Localization with Deep Reinforcement Learning</q>, 2015,</li>
+							<li>M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, and A. Zisserman, <q>The pascal visual object classes (voc) challenge</q>, International Journal of Computer Vision, 88(2):303–338, June 2010.</li>
+							<li>Karen Simonyan and Andrew Zisserman, <q>Very deep convolutional networks for large-scale image recognition</q>, CoRR, abs/1409.1556, 2014,</li>
+							<li>Richard S. Sutton and Andrew G. Barto, <q>Introduction to Reinforcement Learning</q>, MIT Press, Cambridge, MA, USA, 2nd edition, 2012,</li>
+							<li><q>CS231n Convolutional Neural Networks for Visual Recognition</q>, online: <a href="http://cs231n.github.io">http://cs231n.github.io</a>.</li>
 						</ol>
 					</small>
 				</section>
